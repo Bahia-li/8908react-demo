@@ -4,9 +4,6 @@
 
 import axios from 'axios';
 import errCode from '../config/error-code';
-import {
-  config
-} from 'rxjs';
 
 //创建axios实例
 const axiosInstance = axios.create({

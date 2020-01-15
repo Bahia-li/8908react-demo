@@ -6,6 +6,10 @@
    addWebpackAlias
  } = require('customize-cra');
 
+ const {
+   resolve
+ } = require('path')
+
  module.exports = override(
    fixBabelImports('import', {
      libraryName: 'antd',
@@ -21,5 +25,8 @@
    //ES7 装饰器语法兼容
    addDecoratorsLegacy(),
    //配置webpack路径别名
-   addWebpackAlias({})
+   addWebpackAlias({
+     '$conf': resolve(__dirname, './src/config'),
+     '$redux': resolve(__dirname, './src/redux')
+   })
  );

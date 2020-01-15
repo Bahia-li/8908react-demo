@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import { Form, Input, Button, Icon, message } from "antd";
 import { connect } from "react-redux";
+
 import { saveUserAsync } from "../../redux/actions.js";
+import withCheckLogin from "./with-check-login";
 
 import logo from "./img/logo.png";
 import "./css/login.less";
 
+@withCheckLogin
 @connect(null, { saveUserAsync })
 @Form.create()
 class Login extends Component {
@@ -80,7 +83,7 @@ class Login extends Component {
           }); */
       }
     });
-    const values = this.props.form.getFieldsValue();
+    // const values = this.props.form.getFieldsValue();
   };
 
   render() {

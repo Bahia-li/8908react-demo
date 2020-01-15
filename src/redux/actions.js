@@ -5,12 +5,25 @@
  * 一部请求 action
  */
 
-import { reqLogin } from "../api/index";
-import { setItem } from "../utils/storage";
-import { SAVE_USER } from "./action-types";
-import { dispatch } from "rxjs/internal/observable/range";
+import {
+  reqLogin
+} from "../api/index";
+import {
+  setItem
+} from "../utils/storage";
+import {
+  SAVE_USER,
+  REMOVE_USET
+} from "./action-types";
 
-const saveUser = user => ({ type: SAVE_USER, data: user });
+const saveUser = user => ({
+  type: SAVE_USER,
+  data: user
+});
+
+export const removeUser = () => ({
+  type: REMOVE_USET
+})
 
 export const saveUserAsync = (username, password) => {
   return dispatch => {

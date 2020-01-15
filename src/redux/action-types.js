@@ -3,3 +3,4 @@
  */
 
 export const SAVE_USER = 'SAVE_USER';
+export const REMOVE_USET = 'REMOVE_USET'

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Menu, Icon } from "antd";
 import { Link, withRouter } from "react-router-dom";
+import { FormattedMessage } from "react-intl";
 
 import munes from "$conf/menus";
 
@@ -18,7 +19,7 @@ class LeftNav extends Component {
             title={
               <span>
                 <Icon type={mune.icon} />
-                <span>{mune.title}</span>
+                <FormattedMessage id={mune.title} />
               </span>
             }
           >
@@ -40,7 +41,7 @@ class LeftNav extends Component {
       <Item key={mune.path}>
         <Link to={mune.path}>
           <Icon type={mune.icon} />
-          <span>{mune.title}</span>
+          <FormattedMessage id={mune.title} />
         </Link>
       </Item>
     );
@@ -49,9 +50,14 @@ class LeftNav extends Component {
   findOpenKeys = (pathname, munes) => {
     const mune = munes.find(mune => {
       //判断如果存在子节点
-      if (mune.children) {
-        return mune.children.find(cMune => cMune.path === pathname);
-      }
+      // if (mune.children) {
+      //   return mune.children.find(cMune => cMune.path === pathname);
+      // }
+
+      //与运算 如果
+      return (
+        mune.children && mune.children.find(cMune => cMune.path === pathname)
+      );
     });
 
     if (mune) {

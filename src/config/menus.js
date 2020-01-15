@@ -1,7 +1,3 @@
-import {
-  duration
-} from "moment";
-
 /**
  * 定义导航列表数据及状态
  */
@@ -14,46 +10,46 @@ import {
  * children 子选项 里面也是对象
  */
 const munes = [{
-    title: '首页',
+    title: 'home',
     icon: 'home',
     path: '/'
   },
   {
-    title: '商品',
+    title: 'products',
     icon: 'appstore',
     path: '/products',
     children: [{
-      title: '分类管理',
+      title: 'category',
       icon: 'bars',
       path: '/category',
     }, {
-      title: '商品管理',
+      title: 'product',
       icon: 'tool',
       path: '/product',
     }]
   }, {
-    title: '用户管理',
+    title: 'user',
     icon: 'user',
     path: '/user'
   }, {
-    title: '权限管理',
+    title: 'role',
     icon: 'safety-certificate',
     path: '/role'
   }, {
-    title: '图形列表',
+    title: 'charts',
     icon: 'area-chart',
     path: '/charts',
     children: [{
-        title: '柱状图',
+        title: 'bar',
         icon: 'bar-chart',
         path: '/chart/bar',
       }, {
-        title: '折线图',
+        title: 'line',
         icon: 'line-chart',
         path: '/chart/line',
       },
       {
-        title: '饼状图',
+        title: 'pie',
         icon: 'pie-chart',
         path: '/chart/pie',
       }

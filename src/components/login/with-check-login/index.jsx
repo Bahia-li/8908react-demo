@@ -25,9 +25,7 @@ export default function wothCheckLogin(WrappedComponent) {
 
       //判断是否存在token
 
-      console.log(token);
       if (token) {
-        console.log("登录");
         //判断是否登录过
         if (pathname === "/login") {
           //跳转路径到主界面

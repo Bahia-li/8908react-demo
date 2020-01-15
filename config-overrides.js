@@ -27,6 +27,8 @@
    //配置webpack路径别名
    addWebpackAlias({
      '$conf': resolve(__dirname, './src/config'),
-     '$redux': resolve(__dirname, './src/redux')
+     '$redux': resolve(__dirname, './src/redux'),
+     '$conw': resolve(__dirname, './src/components/login')
+
    })
  );

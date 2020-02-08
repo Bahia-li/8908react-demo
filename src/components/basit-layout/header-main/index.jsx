@@ -79,7 +79,13 @@ class HeaderMain extends Component {
       if (menu.children) {
         for (let index = 0; index < menu.children.length; index++) {
           const cMune = menu.children[index];
-          if (cMune.path === pathname) {
+          /*  if (cMune.path === pathname) {
+            return cMune.title;
+          } */
+          // 如果pathname是 /product 返回 product
+          // 如果pathname是 /product/add 返回 product
+          // cMenu.path是 /product
+          if (pathname.indexOf(cMune.path) !== -1) {
             return cMune.title;
           }
         }

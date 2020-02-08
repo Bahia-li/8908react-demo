@@ -19,7 +19,6 @@ class App extends Component {
   render() {
     const language = this.props.language;
     const isEn = language === "en";
-    console.log(routes);
     return (
       <ConfigProvider locale={isEn ? en_US : zh_CN}>
         <IntlProvider

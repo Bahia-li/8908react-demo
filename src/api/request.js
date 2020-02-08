@@ -4,8 +4,10 @@
 
 import axios from 'axios';
 import errCode from '../config/error-code';
-import store from '$redux/store'
-
+import {message} from 'antd';
+import store from '$redux/store';
+import {removeItem} from '$utils/storage';
+import {removeUser} from '$redux/actions';
 //创建axios实例
 const axiosInstance = axios.create({
   baseURL: '/api', //公共请求资源路径
@@ -58,11 +60,18 @@ axiosInstance.interceptors.response.use(
   err => {
     //错误原因
     let errMsg = '';
-
+    const status = err.response.status;
     if (err.response) {
       //接受到响应,但是接受回来的是失败的响应
       //根据响应状态码判断错误类型
-      errMsg = errCode[err.response.status];
+      errMsg = errCode[status];
+
+      //判断tonken过期没有权限访问跳转到登录界面
+      if (status === 401) {
+        removeItem('user');
+        store.disabled(removeUser());
+        message.error('登录过期,请重新登录！')
+      }
     } else {
       //没有接受到响应
       if (err.message.indexOf('Network Error')) {

@@ -19,7 +19,9 @@ class LeftNav extends Component {
             title={
               <span>
                 <Icon type={mune.icon} />
-                <FormattedMessage id={mune.title} />
+                <span>
+                  <FormattedMessage id={mune.title} />
+                </span>
               </span>
             }
           >
@@ -40,8 +42,12 @@ class LeftNav extends Component {
     return (
       <Item key={mune.path}>
         <Link to={mune.path}>
-          <Icon type={mune.icon} />
-          <FormattedMessage id={mune.title} />
+          <span>
+            <Icon type={mune.icon} />
+            <span>
+              <FormattedMessage id={mune.title} />
+            </span>
+          </span>
         </Link>
       </Item>
     );
@@ -69,7 +75,12 @@ class LeftNav extends Component {
     //获取url 路径 这里需要用到withRouter
     //withRouter 给组件添加三大属性
     //获取pathname值
-    const { pathname } = this.props.location;
+    let { pathname } = this.props.location;
+
+    //pathname可能存在product/add 如果包含product 修改成product
+    if (pathname.indexOf("/product") !== -1) {
+      pathname = "/product";
+    }
 
     //获取findOpenKeys返回来的对象
     const openKey = this.findOpenKeys(pathname, munes);

@@ -42,16 +42,16 @@ const munes = [{
     children: [{
         title: 'bar',
         icon: 'bar-chart',
-        path: '/chart/bar',
+        path: '/charts/bar',
       }, {
         title: 'line',
         icon: 'line-chart',
-        path: '/chart/line',
+        path: '/charts/line',
       },
       {
         title: 'pie',
         icon: 'pie-chart',
-        path: '/chart/pie',
+        path: '/charts/pie',
       }
     ]
   }

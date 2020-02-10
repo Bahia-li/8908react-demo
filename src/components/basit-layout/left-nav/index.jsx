@@ -2,11 +2,13 @@ import React, { Component } from "react";
 import { Menu, Icon } from "antd";
 import { Link, withRouter } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
+import { connect } from "react-redux";
 
 import munes from "$conf/menus";
 
 const { SubMenu, Item } = Menu;
 
+@connect(state => ({ roleMenus: state.user.user.menus }))
 @withRouter
 class LeftNav extends Component {
   crateMenus = munes => {
@@ -82,8 +84,32 @@ class LeftNav extends Component {
       pathname = "/product";
     }
 
+    //获取用户权限
+    const roleMenus = this.props.roleMenus;
+
+    const filterMenus = munes.reduce((p, c) => {
+      //对原来的数据进行深度克隆，不会影响原来的数据
+      c = JSON.parse(JSON.stringify(c));
+      //判断如果一级菜单不属于权限列表，并与没有二级菜单
+      if (roleMenus.indexOf(c.path) !== -1 || c.children) {
+        //二级菜单
+        if (c.children) {
+          const children = c.children.filter(item => {
+            return roleMenus.indexOf(item.path) !== -1;
+          });
+
+          if (!children.length) {
+            return p;
+          }
+          c.children = children;
+        }
+        p.push(c);
+      }
+      return p;
+    }, []);
+
     //获取findOpenKeys返回来的对象
-    const openKey = this.findOpenKeys(pathname, munes);
+    const openKey = this.findOpenKeys(pathname, filterMenus);
 
     return (
       /**
@@ -96,7 +122,7 @@ class LeftNav extends Component {
         defaultOpenKeys={[openKey]}
         mode="inline"
       >
-        {this.crateMenus(munes)}
+        {this.crateMenus(filterMenus)}
       </Menu>
     );
   }

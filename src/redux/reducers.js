@@ -10,7 +10,10 @@ import {
   DELETE_CATEGOR_CATEGOTY,
   UPDAYE_CATEGOR_CATEGOTY,
   SET_PRODUCT,
-  SET_SEARCH_PRODUCT
+  SET_SEARCH_PRODUCT,
+  GET_ROLE_LIST,
+  REQ_ADD_ROLE,
+  REQ_UPDATE_ROLE
 } from "./action-types";
 import {
   getItem
@@ -78,10 +81,33 @@ function products(prevState = initPriducts, action) {
   }
 }
 
+//初始化角色数据
+const initRolets = [];
+
+function roles(prevState = initRolets, action) {
+  switch (action.type) {
+    case GET_ROLE_LIST:
+      return action.data
+    case REQ_ADD_ROLE:
+      return [...prevState, action.data]
+    case REQ_UPDATE_ROLE:
+      return prevState.map(role => {
+        if (action.data._id === role._id) {
+          console.log(action.data);
+          return action.data
+        }
+        return role
+      })
+    default:
+      return prevState
+  }
+}
+
 //向外暴露
 export default combineReducers({
   user,
   language,
   categories,
-  products
+  products,
+  roles
 });

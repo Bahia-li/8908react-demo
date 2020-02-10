@@ -29,10 +29,12 @@ class App extends Component {
             <Switch>
               <Route path="/login" exact component={Login} />
               <BasitLayout>
-                {routes.map(route => {
-                  /* <Route path={route.path} exact={route.exact} component={route.component} /> */
-                  return <Route {...route} key={route.path} />;
-                })}
+                <Switch>
+                  {routes.map(route => {
+                    /* <Route path={route.path} exact={route.exact} component={route.component} /> */
+                    return <Route {...route} key={route.path} />;
+                  })}
+                </Switch>
               </BasitLayout>
             </Switch>
           </Router>

@@ -29,6 +29,7 @@
      '$conf': resolve(__dirname, './src/config'),
      '$redux': resolve(__dirname, './src/redux'),
      '$conw': resolve(__dirname, './src/components/login'),
-     '$utils': resolve(__dirname, './src/utils')
+     '$utils': resolve(__dirname, './src/utils'),
+     '$api': resolve(__dirname, './src/api')
    })
  );

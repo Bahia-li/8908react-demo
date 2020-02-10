@@ -1,7 +1,9 @@
 import Home from "../components/home";
 import Category from "../components/category";
 import Product from "../components/product";
-import AddProduct from "../components/product/add-product";
+import productForm from "../components/product/product-form";
+import productDetail from "../components/product/product-detail";
+import Role from "../components/role";
 
 //把页面功能组件封装在一起
 
@@ -23,7 +25,22 @@ const routes = [
   },
   {
     path: "/product/add",
-    component: AddProduct, //添加商品
+    component: productForm, //添加商品
+    exact: true
+  },
+  {
+    path: "/product/update/:id",
+    component: productForm, //添加商品
+    exact: true
+  },
+  {
+    path: "/product/:id",
+    component: productDetail, //商品详情
+    exact: true
+  },
+  {
+    path: "/role",
+    component: Role, //权限管理
     exact: true
   }
 ];

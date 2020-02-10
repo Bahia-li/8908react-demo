@@ -12,7 +12,10 @@ import {
   reqDeleteCategory,
   reqUpdateCategory,
   reqSetProductList,
-  reqSearchProducts
+  reqSearchProducts,
+  reqGetRoleList,
+  reqAddRole,
+  reqUpdateRole
 } from "../api/index";
 import {
   setItem
@@ -26,9 +29,11 @@ import {
   DELETE_CATEGOR_CATEGOTY,
   UPDAYE_CATEGOR_CATEGOTY,
   SET_PRODUCT,
-  SET_SEARCH_PRODUCT
+  SET_SEARCH_PRODUCT,
+  GET_ROLE_LIST,
+  REQ_ADD_ROLE,
+  REQ_UPDATE_ROLE
 } from "./action-types";
-
 export const changeLanguage = lang => ({
   type: CHANGE_ANGUAGE,
   data: lang
@@ -125,7 +130,7 @@ const setProduct = product => ({
 });
 
 //查询商品列表
-export const setProductAsync = (pageNum, pageSize) => {
+export const getProductAsync = (pageNum, pageSize) => {
   return dispatch => {
     //调用请求方法发送请求
     return reqSetProductList(pageNum, pageSize).then(response => {
@@ -141,13 +146,64 @@ const setSearchProduct = product => ({
 });
 
 //搜索商品分页列表
-export const setSearchProducts = (pageNum, pageSize, searchName, searchType) => {
+export const getSearchProducts = (pageNum, pageSize, searchName, searchType) => {
 
   return dispatch => {
     //调用请求方法发送请求
     return reqSearchProducts(pageNum, pageSize, searchName, searchType).then(response => {
       //触发更新
       dispatch(setSearchProduct(response))
+    })
+  }
+}
+
+const getRoleList = role => ({
+  type: GET_ROLE_LIST,
+  data: role
+});
+
+//搜索商品分页列表
+export const getRoleListAsync = () => {
+  return dispatch => {
+    //调用请求方法发送请求
+    return reqGetRoleList().then(response => {
+      //触发更新
+      dispatch(getRoleList(response))
+    })
+  }
+}
+
+const addRole = role => ({
+  type: REQ_ADD_ROLE,
+  data: role
+});
+
+//添加角色
+export const addRoleAsync = (name) => {
+  return dispatch => {
+    //调用请求方法发送请求
+    return reqAddRole(name).then(response => {
+      //触发更新
+      dispatch(addRole(response))
+    })
+  }
+}
+
+const updateRole = role => ({
+  type: REQ_UPDATE_ROLE,
+  data: role
+});
+
+//修改角色
+export const updateRoleAsync = (name) => {
+  return dispatch => {
+    //调用请求方法发送请求
+    return reqUpdateRole(name).then(response => {
+
+      //触发更新
+      dispatch(updateRole(response))
+      //返回更新后状态的值
+      return response;
     })
   }
 }

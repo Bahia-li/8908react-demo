@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { Table, Button, Icon, Card, message, Select, Input } from "antd";
-import { setProductAsync, setSearchProducts } from "$redux/actions";
+import { getProductAsync, getSearchProducts } from "$redux/actions";
 import { connect } from "react-redux";
+import { reqUpdateProductStatus } from "$api";
 
 @connect(state => ({ products: state.products }), {
-  setProductAsync,
-  setSearchProducts
+  getProductAsync,
+  getSearchProducts
 })
 class Product extends Component {
   state = {
@@ -13,8 +14,13 @@ class Product extends Component {
     total: 0, //总数
     loading: false,
     searchName: "",
-    searchType: "productName"
+    searchType: "productName",
+    current: 1
   };
+
+  //判断实例对象的属性
+  isSearchValue = "";
+
   categories = [
     {
       name: 1111,
@@ -35,33 +41,159 @@ class Product extends Component {
     },
     {
       title: "商品价格",
-      dataIndex: "price"
+      dataIndex: "price",
+      render: price => {
+        return `￥${price}`;
+      }
     },
     {
       title: "商品状态",
-      dataIndex: "category",
-      render: () => {
-        return (
-          <div>
-            <Button type="primary">上架</Button>
-            <span>已下架</span>
-          </div>
-        );
+      // dataIndex: "category",
+      render: ({ _id, status }) => {
+        /* 
+          status 1：已下架
+          status 2：已上架
+        */
+        if (status === 1) {
+          return (
+            <div>
+              <Button
+                type="primary"
+                onClick={this.UpdateProductStatus(_id, status)}
+              >
+                上架
+              </Button>
+              <span>已下架</span>
+            </div>
+          );
+        } else {
+          return (
+            <div>
+              <Button
+                type="primary"
+                onClick={this.UpdateProductStatus(_id, status)}
+              >
+                下架
+              </Button>
+              <span>已上架</span>
+            </div>
+          );
+        }
       }
     },
     {
       title: "操作",
-      render: () => {
+      render: product => {
         return (
           <div>
-            <Button type="link">详情</Button>
-            <Button type="link">修改</Button>
+            <Button type="link" onClick={this.showProduct(product)}>
+              详情
+            </Button>
+            <Button type="link" onClick={this.showProduct(product, "update/")}>
+              修改
+            </Button>
           </div>
         );
       }
     }
   ];
+
+  //更新商品状态方法
+  UpdateProductStatus = (productId, status) => {
+    return () => {
+      const newStatus = 3 - status;
+      reqUpdateProductStatus(productId, status).then(res => {
+        //请求成功
+        //更新状态数据
+        this.setState({
+          productList: this.state.productList.map(product => {
+            if (product._id === productId) {
+              return {
+                // 展开对象：包含对象的所有属性
+                ...product,
+                //添加一个新的属性，覆盖旧的属性
+                status: newStatus
+              };
+            }
+            return product;
+          })
+        });
+        message.success("更新状态数据成功！");
+      });
+    };
+  };
+
+  /*  //商品修改
+  showUpdateProduct = product => {
+    return () => {
+      const id = product._id;
+      //push 第二个参数是为了传参数给所跳转到的路径 product
+      this.props.history.push("/product/update/" + id, product);
+    };
+  };
+
+  //商品详情
+  showProductDetail = product => {
+    return () => {
+      const id = product._id;
+      //push 第二个参数是为了传参数给所跳转到的路径 product
+      this.props.history.push("/product/detail/" + id, product);
+    };
+  }; */
+
+  //封装商品详情和商品修改方法
+  showProduct = (product, path = "") => {
+    return () => {
+      const id = product._id;
+      //push 第二个参数是为了传参数给所跳转到的路径 product
+      this.props.history.push("/product/" + path + id, product);
+    };
+  };
+
+  //查询数据  普通查询和搜索查询
   getProductList = (pageNum, pageSize) => {
+    //设置搜索状态为true
+    this.setState({
+      loading: true
+    });
+
+    const { isSearchValue } = this;
+    const { searchType } = this.state;
+    let promise = null;
+    //判断isSearchValue是否有值，如果有值就是搜索查询，如果没有值就是普通查询
+    if (isSearchValue) {
+      promise = this.props.getSearchProducts({
+        pageNum,
+        pageSize,
+        searchName: isSearchValue,
+        searchType
+      });
+    } else {
+      //普通查询
+      promise = this.props.getProductAsync(pageNum, pageSize);
+    }
+
+    promise
+      .then(res => {
+        const products = this.props.products;
+        this.setState({
+          productList: products.list,
+          total: products.total,
+          searchName: isSearchValue,
+          current: pageNum
+        });
+      })
+      .catch(err => {
+        message.error(err);
+      })
+      .finally(() => {
+        this.setState({
+          loading: false
+        });
+      });
+  };
+
+  /*   getProductList = (pageNum, pageSize) => {
     const { searchName, searchType } = this.state;
 
     this.setState({
@@ -70,7 +202,7 @@ class Product extends Component {
     //判断分页是列表分页还是查询分页
     if (searchName) {
       this.props
-        .setSearchProducts(pageNum, pageSize, searchName, searchType)
+        .getSearchProducts(pageNum, pageSize, searchName, searchType)
         .then(response => {
           this.setState({
             productList: this.props.products.list,
@@ -86,7 +218,7 @@ class Product extends Component {
         });
     } else {
       this.props
-        .setProductAsync(pageNum, pageSize)
+        .getProductAsync(pageNum, pageSize)
         .then(response => {
           this.setState({
             productList: this.props.products.list,
@@ -101,7 +233,7 @@ class Product extends Component {
           message.error(err);
         });
     }
-  };
+  }; */
 
   addProduct = () => {
     this.props.history.push("/product/add");
@@ -110,8 +242,24 @@ class Product extends Component {
   componentDidMount() {
     this.getProductList(1, 3);
   }
+
+  //点击搜索按钮
+  search = () => {
+    const { searchName } = this.state;
+    //点击搜索按钮 才给isSearchValue赋值
+    this.isSearchValue = searchName;
+
+    this.getProductList(1, 3);
+  };
   render() {
-    const { productList, total, loading, searchName, searchType } = this.state;
+    const {
+      productList,
+      total,
+      loading,
+      searchName,
+      searchType,
+      current
+    } = this.state;
     return (
       <Card
         title={
@@ -137,7 +285,7 @@ class Product extends Component {
                 })
               }
             />
-            <Button type="primary" onClick={() => this.getProductList(1, 3)}>
+            <Button type="primary" onClick={this.search}>
               搜索
             </Button>
           </div>
@@ -162,6 +310,7 @@ class Product extends Component {
             showQuickJumper: true,
             showSizeChanger: true,
             total,
+            current,
             onChange: this.getProductList,
             onShowSizeChange: this.getProductList
           }}
